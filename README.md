@@ -133,7 +133,7 @@ This generates `sim/wave.vcd`.
 The testbench assembles a `.s` kernel from `Algorithms/rv32i`, converts it to a hex file, and loads it into the ROM.
 
 Default kernel:
-- `Algorithms/rv32i/fibonacci_sec.s`
+- `Algorithms/rv32i/count_up.s`
 
 Run with a different kernel:
 ```bash
@@ -154,6 +154,13 @@ Run the simulator with a specific kernel:
 In short:
 - `make -C sim` = build only
 - `make -C sim run` = build (if needed) + run
+
+### What happens during `make -C sim run`
+The testbench (`sim/tb_rvec32i.sv`) does the following at runtime:
+- Assembles the selected `.s` file into `sim/kernel.o`
+- Converts it to hex (`sim/kernel.hex`) and loads it into the ROM
+- Runs ~200 cycles, counts instructions, and prints IPC
+- Dumps waveforms to `sim/wave.vcd`
 
 ### Expected console output
 When you build, you will see a Verilator compilation report similar to:
