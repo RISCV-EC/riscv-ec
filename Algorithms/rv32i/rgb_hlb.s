@@ -1,16 +1,9 @@
 	.file	"rgb_hlb.c"
 	.option nopic
-	.attribute arch, "rv32i2p0"
+	.attribute arch, "rv32i2p1"
 	.attribute unaligned_access, 0
 	.attribute stack_align, 16
 	.text
-	.globl	__floatsidf
-	.globl	__divdf3
-	.globl	__gtdf2
-	.globl	__ltdf2
-	.globl	__adddf3
-	.globl	__eqdf2
-	.globl	__subdf3
 	.align	2
 	.globl	RGBtoHSL
 	.type	RGBtoHSL, @function
@@ -416,4 +409,12 @@ main:
 .LC4:
 	.word	0
 	.word	1074790400
-	.ident	"GCC: (g1ea978e3066) 12.1.0"
+	.globl	__subdf3
+	.globl	__eqdf2
+	.globl	__adddf3
+	.globl	__ltdf2
+	.globl	__gtdf2
+	.globl	__divdf3
+	.globl	__floatsidf
+	.ident	"GCC: (14.2.0+19) 14.2.0"
+	.section	.note.GNU-stack,"",@progbits

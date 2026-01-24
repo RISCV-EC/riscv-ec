@@ -1,10 +1,9 @@
 	.file	"mat_mult.c"
 	.option nopic
-	.attribute arch, "rv32i2p0"
+	.attribute arch, "rv32i2p1"
 	.attribute unaligned_access, 0
 	.attribute stack_align, 16
 	.text
-	.globl	__mulsi3
 	.align	2
 	.globl	matrix_multiply
 	.type	matrix_multiply, @function
@@ -207,4 +206,6 @@ main:
 	addi	sp,sp,128
 	jr	ra
 	.size	main, .-main
-	.ident	"GCC: (g1ea978e3066) 12.1.0"
+	.globl	__mulsi3
+	.ident	"GCC: (14.2.0+19) 14.2.0"
+	.section	.note.GNU-stack,"",@progbits
