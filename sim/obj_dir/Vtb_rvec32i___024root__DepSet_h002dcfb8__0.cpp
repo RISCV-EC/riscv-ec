@@ -34,7 +34,7 @@ VL_INLINE_OPT VlCoroutine Vtb_rvec32i___024root___eval_initial__TOP__Vtiming__0(
         co_await vlSelfRef.__VdlySched.delay(0x1388ULL, 
                                              nullptr, 
                                              "tb_rvec32i.sv", 
-                                             29);
+                                             31);
         vlSelfRef.tb_rvec32i__DOT__clk = (1U & (~ (IData)(vlSelfRef.tb_rvec32i__DOT__clk)));
     }
 }
@@ -49,7 +49,7 @@ void Vtb_rvec32i___024root___eval_act(Vtb_rvec32i___024root* vlSelf) {
     // Body
     if ((5ULL & vlSelfRef.__VactTriggered.word(0U))) {
         Vtb_rvec32i___024root___act_comb__TOP__0(vlSelf);
-        vlSelfRef.__Vm_traceActivity[2U] = 1U;
+        vlSelfRef.__Vm_traceActivity[3U] = 1U;
     }
 }
 
@@ -452,11 +452,11 @@ void Vtb_rvec32i___024root___eval_nba(Vtb_rvec32i___024root* vlSelf) {
     // Body
     if ((1ULL & vlSelfRef.__VnbaTriggered.word(0U))) {
         Vtb_rvec32i___024root___nba_sequent__TOP__0(vlSelf);
-        vlSelfRef.__Vm_traceActivity[3U] = 1U;
+        vlSelfRef.__Vm_traceActivity[4U] = 1U;
     }
     if ((5ULL & vlSelfRef.__VnbaTriggered.word(0U))) {
         Vtb_rvec32i___024root___act_comb__TOP__0(vlSelf);
-        vlSelfRef.__Vm_traceActivity[4U] = 1U;
+        vlSelfRef.__Vm_traceActivity[5U] = 1U;
     }
 }
 
@@ -505,6 +505,10 @@ VL_INLINE_OPT void Vtb_rvec32i___024root___nba_sequent__TOP__0(Vtb_rvec32i___024
          != (IData)(vlSelfRef.tb_rvec32i__DOT__last_pc))) {
         vlSelfRef.tb_rvec32i__DOT__instr_count = (1ULL 
                                                   + vlSelfRef.tb_rvec32i__DOT__instr_count);
+    }
+    if (((IData)(vlSelfRef.tb_rvec32i__DOT__dut__DOT__cu_wem) 
+         & (0xffU == (IData)(vlSelfRef.tb_rvec32i__DOT__dut__DOT__data_m_0__DOT__addr)))) {
+        vlSelfRef.tb_rvec32i__DOT__done = 1U;
     }
     if (__VdlySet__tb_rvec32i__DOT__dut__DOT__data_m_0__DOT__mem__v0) {
         vlSelfRef.tb_rvec32i__DOT__dut__DOT__data_m_0__DOT__mem[__VdlyDim0__tb_rvec32i__DOT__dut__DOT__data_m_0__DOT__mem__v0] 

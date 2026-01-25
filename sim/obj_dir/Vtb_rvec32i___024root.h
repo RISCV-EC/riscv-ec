@@ -16,6 +16,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_rvec32i___024root final : public Verilate
 
     // DESIGN SPECIFIC STATE
     CData/*0:0*/ tb_rvec32i__DOT__clk;
+    CData/*0:0*/ tb_rvec32i__DOT__done;
     CData/*0:0*/ tb_rvec32i__DOT__dut__DOT__cu_alu2reg;
     CData/*3:0*/ tb_rvec32i__DOT__dut__DOT__cu_alu_op;
     CData/*0:0*/ tb_rvec32i__DOT__dut__DOT__cu_alu_scr;
@@ -37,6 +38,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_rvec32i___024root final : public Verilate
     SData/*12:0*/ tb_rvec32i__DOT__dut__DOT__cont_0_sal;
     SData/*12:0*/ tb_rvec32i__DOT__dut__DOT__sum_0_dout;
     SData/*12:0*/ tb_rvec32i__DOT__dut__DOT__sign_oe_0__DOT__temp;
+    IData/*31:0*/ tb_rvec32i__DOT__unnamedblk1__DOT__i;
     IData/*31:0*/ tb_rvec32i__DOT__dut__DOT__alu_alu_sal;
     IData/*31:0*/ tb_rvec32i__DOT__dut__DOT__mux2_1_0_sal;
     IData/*31:0*/ tb_rvec32i__DOT__dut__DOT__reg_b_0_do2;
@@ -48,7 +50,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vtb_rvec32i___024root final : public Verilate
     VlUnpacked<IData/*31:0*/, 256> tb_rvec32i__DOT__dut__DOT__data_m_0__DOT__mem;
     VlUnpacked<IData/*31:0*/, 256> tb_rvec32i__DOT__dut__DOT__prog_m_0__DOT__mem;
     VlUnpacked<IData/*31:0*/, 32> tb_rvec32i__DOT__dut__DOT__reg_b_0__DOT__mem;
-    VlUnpacked<CData/*0:0*/, 5> __Vm_traceActivity;
+    VlUnpacked<CData/*0:0*/, 6> __Vm_traceActivity;
     VlDelayScheduler __VdlySched;
     VlTriggerScheduler __VtrigSched_h1b7725ae__0;
     VlTriggerScheduler __VtrigSched_h1b77266f__0;

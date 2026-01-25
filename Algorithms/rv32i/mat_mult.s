@@ -199,6 +199,9 @@ main:
 	mv	a1,a4
 	mv	a0,a5
 	call	matrix_multiply
+	li	a5,255
+	li	a4,1
+	sb	a4,0(a5)
 	li	a5,0
 	mv	a0,a5
 	lw	ra,124(sp)

@@ -1,4 +1,6 @@
 
+#include <stdint.h>
+
 #define ROWS_A 3
 #define COLS_A 3
 #define ROWS_B 3
@@ -32,5 +34,6 @@ int main() {
 
     matrix_multiply(matrixA, matrixB, result);
 
+    *(volatile uint8_t *)0xFF = 1;
     return 0;
 }

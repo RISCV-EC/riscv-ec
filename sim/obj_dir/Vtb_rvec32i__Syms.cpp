@@ -43,7 +43,7 @@ Vtb_rvec32i__Syms::Vtb_rvec32i__Syms(VerilatedContext* contextp, const char* nam
     , TOP{this, namep}
 {
         // Check resources
-        Verilated::stackCheck(82);
+        Verilated::stackCheck(78);
     // Configure time unit / time precision
     _vm_contextp__->timeunit(-9);
     _vm_contextp__->timeprecision(-12);

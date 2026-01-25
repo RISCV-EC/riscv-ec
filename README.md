@@ -4,12 +4,13 @@
 
 # RISCV-EC-v1.0
 The first Ecuadorian open-source RISC-V soft processor for Edge Computing applications.  
+This repository provides a SystemVerilog (SV) simulation of the RISCV-EC processor with additional benchmark kernels, simulated using Verilator. It is a continuation of the work presented in the 2025 publication:  
 This version corresponds to the architecture and performance analysis presented in the 2025 publication:  
 **“Evaluating the RISCV-EC: A Comparative Analysis of Instruction Efficiency and Power Performance for Edge Computing.”**
 
 ---
 
-## 📌 Contents
+## Contents
 - Overview
 - Microarchitecture
 - Performance Evaluation
@@ -22,32 +23,33 @@ This version corresponds to the architecture and performance analysis presented 
 
 ---
 
-## 🧩 Overview
+## Overview
 **RISCV-EC-v1.0** is a soft processor based on a **5-stage, multi-cycle, non-pipelined architecture** implemented in **VHDL** for FPGA devices.  
 It executes each instruction in its entirety before proceeding to the next, focusing on **instruction efficiency**, **execution speed**, and **power-performance balance** for **edge computing** environments.
 
-The processor is implemented and validated on a **Xilinx Zynq-7000 SoC FPGA**, maintaining clock parity with reference processors to ensure unbiased benchmarking.
+This repository also provides a SystemVerilog simulation flow using Verilator, with waveform inspection in GTKWave.  
+These simulations aim to obtain benchmark metrics that can later be used to compare RISCV-EC against other RISC-V cores.
 
 ---
 
-## ⚙️ Microarchitecture
-RISCV-EC follows the standard **RISC-V single-core ISA** and includes the following stages:
+## Microarchitecture
+RISCV-EC follows the standard **RISC-V single-core ISA** and includes the following stages (matching the SV implementation):
 
-1. **Instruction Fetch (IF)** – Fetches instructions from 32-word ROM.  
-2. **Instruction Decode (ID)** – Decodes opcode and operands; handles register and immediate values.  
-3. **Execute (EX)** – Performs arithmetic and logical operations using the ALU.  
-4. **Memory Access (MEM)** – Reads/writes data to the 256-word data memory.  
-5. **Write Back (WB)** – Stores computed results into registers.
+1. **Instruction Fetch (IF)** – Fetches instructions from the 256-word ROM (`rtl_sv/prog_m.sv`).  
+2. **Instruction Decode (ID)** – Decodes opcode and operands; handles register and immediate values (`rtl_sv/decoder.sv`, `rtl_sv/CU.sv`).  
+3. **Execute (EX)** – Performs arithmetic and logical operations using the ALU (`rtl_sv/alu.sv`).  
+4. **Memory Access (MEM)** – Reads/writes data to the 256-word data memory (`rtl_sv/data_m.sv`).  
+5. **Write Back (WB)** – Stores computed results into registers (`rtl_sv/reg_b.sv`).
 
 ### Key Components
-- **ALU:** Performs arithmetic and comparison operations (4-bit control).  
-- **Register File:** 32 general-purpose registers (32-bit).  
-- **Control Unit:** Handles instruction decoding and signal generation.  
-- **Multiplexers:** Manage data flow between immediate values, registers, and memory.
+- **ALU:** `alu.sv` uses an `opcode[3:0]` (4 bits) and supports arithmetic and comparison operations.  
+- **Register File:** `reg_b.sv` implements 32 32-bit registers (`mem[0:31]`).  
+- **Control Unit:** `CU.sv` decodes `opcode/func3/func7` and generates control signals.  
+- **Multiplexers:** `mux2_1.sv`, `mux32.sv`, `mux_4b.sv`, `mux_c.sv` route data between immediates, registers, and memory.
 
 ---
 
-## 🧾 ISA
+## ISA
 The following RV32I instructions are implemented in this version. Instruction decode is in `rtl_sv/CU.sv` and ALU operations are in `rtl_sv/alu.sv`.
 
 ### R-type (opcode `0110011`)
@@ -83,30 +85,20 @@ The following RV32I instructions are implemented in this version. Instruction de
 
 ---
 
-## 📊 Performance Evaluation
-Three benchmark algorithms were used to compare RISCV-EC with other processors:
-- **Fibonacci Sequence**
-- **Matrix Multiplication**
-- **RGB to HSL Conversion**
-
-### Compared Architectures and Clock Frequencies
-| Processor | Architecture | Clock | Platform |
-|------------|---------------|--------|------------|
-| **RISCV-EC** | RISC-V 32-bit | 50 MHz | Zynq-7000 SoC FPGA |
-| **ATmega328P** | 8-bit AVR | 16 MHz | Arduino Uno |
-| **ARM Cortex-M0+** | 32-bit ARM | 125 MHz | Raspberry Pi Pico |
-| **ARM Cortex-A9** | 32-bit ARM | 650 MHz | Zynq-7000 SoC |
-
-### Main Findings
-- RISCV-EC demonstrates **fewer executed instructions** compared to the AVR and ARM Cortex-M0+.  
-- It achieves **better instruction efficiency** in serial algorithms such as Fibonacci and matrix multiplication.  
-- **Dynamic power consumption:** ~2.0 mW (FPGA, 50 MHz).  
-- **Logic utilization:** <4% LUTs on Zynq-7000, suitable for low-resource FPGAs.  
-- Although non-pipelined, RISCV-EC achieves a **balanced trade-off between performance and energy efficiency**.
+## Performance Evaluation
+### RISCV-EC Benchmark Metrics (Simulation)
+Metrics are collected in the testbench (`sim/tb_rvec32i.sv`). Cycles are counted on each positive clock edge, instructions are counted when the PC changes, and IPC is computed as `instructions / cycles`. The simulation stops when the kernel writes to data memory address `0xFF` (sentinel), or at a timeout if the sentinel is never written.
+| Kernel | Cycles | Instructions | IPC |
+| --- | --- | --- | --- |
+| `count_down` | 24 | 23 | 0.958333 |
+| `count_up` | 24 | 23 | 0.958333 |
+| `fibonacci_sec` | 53 | 52 | 0.981132 |
+| `mat_mult` | 162 | 161 | 0.993827 |
+| `rgb_hlb` | 112 | 111 | 0.991071 |
 
 ---
 
-## 🖥️ Simulation with Verilator and GTKWave
+## Simulation with Verilator and GTKWave
 This repository includes a SystemVerilog port under `rtl_sv/`, a simulation-ready top module (`rvec32i.sv`), and a testbench in `sim/`.
 
 ### Requirements
@@ -121,63 +113,88 @@ sudo apt-get update
 sudo apt-get install -y verilator gtkwave build-essential
 ```
 
-### Quick start
+### Simulation workflow
+Quick start:
 ```bash
 make -C sim
 make -C sim run
 ```
-
-This generates `sim/wave.vcd`.
-
-### Load a RISC-V assembly kernel into the ROM
-The testbench assembles a `.s` kernel from `Algorithms/rv32i`, converts it to a hex file, and loads it into the ROM.
-
-Default kernel:
-- `Algorithms/rv32i/count_up.s`
-
-Run with a different kernel:
+Run all kernels:
+```bash
+make -C sim run_all
+```
+Run a specific kernel:
 ```bash
 ./sim/obj_dir/simv +KERNEL=Algorithms/rv32i/mat_mult.s
 ```
 
-### Build vs. run (what each command does)
-Build the simulator binary:
-```bash
-make -C sim
+Notes:
+- Default kernel is `Algorithms/rv32i/count_up.s`.
+- Available kernels (from `Algorithms/`): `count_down`, `count_up`, `fibonacci_sec`, `mat_mult`, `rgb_hlb`.
+- `make -C sim` builds only; `make -C sim run` builds (if needed) and runs.
+- The testbench assembles the `.s` kernel, converts it to `kernel.hex`, loads it into instruction ROM (`prog_m_0.mem`), and runs until the kernel writes to `0xFF` (or a timeout). `sim/wave.vcd` is generated.
+
+Expected console output (examples):
 ```
-
-Run the simulator with a specific kernel:
-```bash
-./sim/obj_dir/simv +KERNEL=Algorithms/rv32i/mat_mult.s
-```
-
-In short:
-- `make -C sim` = build only
-- `make -C sim run` = build (if needed) + run
-
-### What happens during `make -C sim run`
-The testbench (`sim/tb_rvec32i.sv`) does the following at runtime:
-- Assembles the selected `.s` file into `sim/kernel.o`
-- Converts it to hex (`sim/kernel.hex`) and loads it into the ROM
-- Runs ~200 cycles, counts instructions, and prints IPC
-- Dumps waveforms to `sim/wave.vcd`
-
-### Expected console output
-When you build, you will see a Verilator compilation report similar to:
-```
+-**************************************************
+* Running Algorithms/rv32i/mat_mult.s
+**************************************************
 - V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
 - Verilator: Built from 0.530 MB sources in 22 modules, into 0.117 MB in 11 C++ files needing 0.000 MB
 - Verilator: Walltime 8.847 s (elab=0.002, cvt=0.017, bld=8.812); cpu 0.029 s on 1 threads; alloced 9.551 MB
 ```
-
-When you run, the testbench prints metrics and the simulation report, for example:
 ```
-cycles=200 instructions=199 ipc=0.995000
+cycles=NNN instructions=MMM ipc=X.XXXXXX
 - tb_rvec32i.sv:68: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
 - Verilator: $finish at 2us; walltime 0.007 s; speed 1.365 ms/s
 - Verilator: cpu 0.001 s on 1 threads; alloced 57 MB
 ```
+
+Example `run_all` metrics:
+```
+**************************************************
+* Running Algorithms/rv32i/count_down.s
+**************************************************
+cycles=24 instructions=23 ipc=0.958333
+- tb_rvec32i.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 245ns; walltime 0.013 s; speed 153.982 us/s
+- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
+**************************************************
+* Running Algorithms/rv32i/count_up.s
+**************************************************
+cycles=24 instructions=23 ipc=0.958333
+- tb_rvec32i.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 245ns; walltime 0.014 s; speed 170.785 us/s
+- Verilator: cpu 0.001 s on 1 threads; alloced 57 MB
+**************************************************
+* Running Algorithms/rv32i/fibonacci_sec.s
+**************************************************
+cycles=53 instructions=52 ipc=0.981132
+- tb_rvec32i.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 535ns; walltime 0.013 s; speed 339.070 us/s
+- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
+**************************************************
+* Running Algorithms/rv32i/mat_mult.s
+**************************************************
+cycles=162 instructions=161 ipc=0.993827
+- tb_rvec32i.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.015 s; speed 697.314 us/s
+- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
+**************************************************
+* Running Algorithms/rv32i/rgb_hlb.s
+**************************************************
+cycles=112 instructions=111 ipc=0.991071
+- tb_rvec32i.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 1us; walltime 0.015 s; speed 557.200 us/s
+- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
+```
+
 
 ### View waveforms in GTKWave
 ```bash
@@ -190,30 +207,30 @@ gtkwave sim/wave.vcd
 - `tb_rvec32i.sal_alu` (ALU output)
 - `tb_rvec32i.alua` (ALU input A)
 - `tb_rvec32i.alub` (ALU input B)
-
-### Metrics (non-intrusive)
-The testbench counts cycles and executed instructions, then prints IPC at the end of simulation.
-
-Run:
-```bash
-make -C sim run
-```
-
-Example output:
-```
-cycles=200 instructions=XX ipc=Y.YY
-```
+- `tb_rvec32i.dut.data_m_0.we` (data memory write enable)
+- `tb_rvec32i.dut.data_m_0.addr` (data memory address)
+- `tb_rvec32i.dut.data_m_0.di` (data memory write data)
 
 ### Waveform examples
+To interpret the waveforms, look for a `data_m_0.we` pulse (write enable). On that cycle:
+- `data_m_0.addr` is the write address
+- `data_m_0.di` is the data written
+- `cont_p` is the PC for that instruction
+
+For `count_down.s`, the final store should write `0x000013BA` (5050) to address `0x00`.
+
 #### Count-up waveforms
 ![GTKWave Count Up example](docs/gtkwave_count_up.png)
+
+#### Count-up waveforms
+![GTKWave Count Up example](docs/gtkwave_count_down.png)
 
 #### Fibonacci waveforms
 ![GTKWave Fibonacci example](docs/gtkwave_fibonacci.png)
 
 ---
 
-## 🔧 Convert C Kernels to RISC-V Assembly
+## Convert C Kernels to RISC-V Assembly
 Use `convert_kernels.py` to convert the C kernels in `Algorithms/` into RISC-V assembly (`.s`) outputs.
 
 ### Requirements
@@ -242,7 +259,7 @@ python3 convert_kernels.py --input Algorithms --output Algorithms/rv32i
 
 ---
 
-## 🧾 Citation
+## Citation
 If you use this repository or reference its contents, please cite the following publications:
 
 - **2025 Publication:**  
@@ -259,7 +276,7 @@ If you use this repository or reference its contents, please cite the following 
 
 ---
 
-## 🧑‍💻 Authors
+## Authors
 ### RISCV-EC v1.0
 | Author | Affiliation |
 | --- | --- |
@@ -279,7 +296,7 @@ If you use this repository or reference its contents, please cite the following 
 
 ---
 
-## 📚 Keywords
+## Keywords
 `RISC-V` · `Soft Processor` · `FPGA Implementation` · `Edge Computing` · `Low Power` · `Open Hardware`
 
 ---

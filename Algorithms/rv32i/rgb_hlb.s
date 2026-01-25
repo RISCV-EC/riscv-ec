@@ -4,417 +4,147 @@
 	.attribute unaligned_access, 0
 	.attribute stack_align, 16
 	.text
+	.globl	sink
+	.section	.sbss,"aw",@nobits
+	.type	sink, @object
+	.size	sink, 1
+sink:
+	.zero	1
+	.text
 	.align	2
-	.globl	RGBtoHSL
 	.type	RGBtoHSL, @function
 RGBtoHSL:
-	addi	sp,sp,-80
-	sw	ra,76(sp)
-	sw	s0,72(sp)
-	sw	s2,68(sp)
-	sw	s3,64(sp)
-	addi	s0,sp,80
-	sw	a0,-68(s0)
-	sw	a1,-72(s0)
-	lbu	a5,-68(s0)
-	mv	a0,a5
-	call	__floatsidf
-	mv	a4,a0
-	mv	a5,a1
-	lui	a3,%hi(.LC0)
-	lw	a2,%lo(.LC0)(a3)
-	lw	a3,%lo(.LC0+4)(a3)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	sw	a4,-24(s0)
-	sw	a5,-20(s0)
-	lbu	a5,-67(s0)
-	mv	a0,a5
-	call	__floatsidf
-	mv	a4,a0
-	mv	a5,a1
-	lui	a3,%hi(.LC0)
-	lw	a2,%lo(.LC0)(a3)
-	lw	a3,%lo(.LC0+4)(a3)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	sw	a4,-32(s0)
-	sw	a5,-28(s0)
-	lbu	a5,-66(s0)
-	mv	a0,a5
-	call	__floatsidf
-	mv	a4,a0
-	mv	a5,a1
-	lui	a3,%hi(.LC0)
-	lw	a2,%lo(.LC0)(a3)
-	lw	a3,%lo(.LC0+4)(a3)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	sw	a4,-40(s0)
-	sw	a5,-36(s0)
-	lw	a2,-32(s0)
-	lw	a3,-28(s0)
-	lw	a0,-24(s0)
-	lw	a1,-20(s0)
-	call	__gtdf2
-	mv	a5,a0
-	ble	a5,zero,.L45
-	lw	a2,-40(s0)
-	lw	a3,-36(s0)
-	lw	a0,-24(s0)
-	lw	a1,-20(s0)
-	call	__gtdf2
-	mv	a5,a0
-	ble	a5,zero,.L46
-	lw	a4,-24(s0)
-	lw	a5,-20(s0)
-	j	.L7
-.L46:
-	lw	a4,-40(s0)
-	lw	a5,-36(s0)
-	j	.L7
-.L45:
-	lw	a2,-40(s0)
-	lw	a3,-36(s0)
-	lw	a0,-32(s0)
-	lw	a1,-28(s0)
-	call	__gtdf2
-	mv	a5,a0
-	ble	a5,zero,.L47
-	lw	a4,-32(s0)
-	lw	a5,-28(s0)
-	j	.L7
-.L47:
-	lw	a4,-40(s0)
-	lw	a5,-36(s0)
-.L7:
-	sw	a4,-48(s0)
-	sw	a5,-44(s0)
-	lw	a2,-32(s0)
-	lw	a3,-28(s0)
-	lw	a0,-24(s0)
-	lw	a1,-20(s0)
-	call	__ltdf2
-	mv	a5,a0
-	bge	a5,zero,.L48
-	lw	a2,-40(s0)
-	lw	a3,-36(s0)
-	lw	a0,-24(s0)
-	lw	a1,-20(s0)
-	call	__ltdf2
-	mv	a5,a0
-	bge	a5,zero,.L49
-	lw	a4,-24(s0)
-	lw	a5,-20(s0)
-	j	.L16
-.L49:
-	lw	a4,-40(s0)
-	lw	a5,-36(s0)
-	j	.L16
-.L48:
-	lw	a2,-40(s0)
-	lw	a3,-36(s0)
-	lw	a0,-32(s0)
-	lw	a1,-28(s0)
-	call	__ltdf2
-	mv	a5,a0
-	bge	a5,zero,.L50
-	lw	a4,-32(s0)
-	lw	a5,-28(s0)
-	j	.L16
-.L50:
-	lw	a4,-40(s0)
-	lw	a5,-36(s0)
-.L16:
-	sw	a4,-56(s0)
-	sw	a5,-52(s0)
-	lw	a2,-56(s0)
-	lw	a3,-52(s0)
-	lw	a0,-48(s0)
-	lw	a1,-44(s0)
-	call	__adddf3
-	mv	a4,a0
-	mv	a5,a1
-	mv	a0,a4
-	mv	a1,a5
-	lui	a5,%hi(.LC1)
-	lw	a2,%lo(.LC1)(a5)
-	lw	a3,%lo(.LC1+4)(a5)
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a3,-72(s0)
-	sw	a4,16(a3)
-	sw	a5,20(a3)
-	lw	a2,-56(s0)
-	lw	a3,-52(s0)
-	lw	a0,-48(s0)
-	lw	a1,-44(s0)
-	call	__eqdf2
-	mv	a5,a0
-	bne	a5,zero,.L51
-	lw	a5,-72(s0)
-	sw	zero,8(a5)
-	sw	zero,12(a5)
-	lw	a5,-72(s0)
-	sw	zero,0(a5)
-	sw	zero,4(a5)
-	j	.L56
-.L51:
-	lw	a2,-56(s0)
-	lw	a3,-52(s0)
-	lw	a0,-48(s0)
-	lw	a1,-44(s0)
-	call	__subdf3
-	mv	a4,a0
-	mv	a5,a1
-	sw	a4,-64(s0)
-	sw	a5,-60(s0)
-	lw	a5,-72(s0)
-	lw	a4,16(a5)
-	lw	a5,20(a5)
-	lui	a3,%hi(.LC2)
-	lw	a2,%lo(.LC2)(a3)
-	lw	a3,%lo(.LC2+4)(a3)
-	mv	a0,a4
-	mv	a1,a5
-	call	__gtdf2
-	mv	a5,a0
-	ble	a5,zero,.L52
-	lui	a5,%hi(.LC1)
-	lw	a2,-48(s0)
-	lw	a3,-44(s0)
-	lw	a0,%lo(.LC1)(a5)
-	lw	a1,%lo(.LC1+4)(a5)
-	call	__subdf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a2,-56(s0)
-	lw	a3,-52(s0)
-	mv	a0,a4
-	mv	a1,a5
-	call	__subdf3
-	mv	a4,a0
-	mv	a5,a1
-	mv	a2,a4
-	mv	a3,a5
-	lw	a0,-64(s0)
-	lw	a1,-60(s0)
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	j	.L25
-.L52:
-	lw	a2,-56(s0)
-	lw	a3,-52(s0)
-	lw	a0,-48(s0)
-	lw	a1,-44(s0)
-	call	__adddf3
-	mv	a4,a0
-	mv	a5,a1
-	mv	a2,a4
-	mv	a3,a5
-	lw	a0,-64(s0)
-	lw	a1,-60(s0)
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-.L25:
-	lw	a3,-72(s0)
-	sw	a4,8(a3)
-	sw	a5,12(a3)
-	lw	a2,-24(s0)
-	lw	a3,-20(s0)
-	lw	a0,-48(s0)
-	lw	a1,-44(s0)
-	call	__eqdf2
-	mv	a5,a0
-	bne	a5,zero,.L53
-	lw	a2,-40(s0)
-	lw	a3,-36(s0)
-	lw	a0,-32(s0)
-	lw	a1,-28(s0)
-	call	__subdf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a2,-64(s0)
-	lw	a3,-60(s0)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	mv	s2,a4
-	mv	s3,a5
-	lw	a2,-40(s0)
-	lw	a3,-36(s0)
-	lw	a0,-32(s0)
-	lw	a1,-28(s0)
-	call	__ltdf2
-	mv	a5,a0
-	bge	a5,zero,.L54
-	lui	a5,%hi(.LC3)
-	lw	a4,%lo(.LC3)(a5)
-	lw	a5,%lo(.LC3+4)(a5)
-	j	.L30
-.L54:
-	li	a4,0
-	li	a5,0
-.L30:
-	mv	a2,s2
-	mv	a3,s3
-	mv	a0,a4
-	mv	a1,a5
-	call	__adddf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a3,-72(s0)
-	sw	a4,0(a3)
-	sw	a5,4(a3)
-	j	.L31
-.L53:
-	lw	a2,-32(s0)
-	lw	a3,-28(s0)
-	lw	a0,-48(s0)
-	lw	a1,-44(s0)
-	call	__eqdf2
-	mv	a5,a0
-	bne	a5,zero,.L55
-	lw	a2,-24(s0)
-	lw	a3,-20(s0)
-	lw	a0,-40(s0)
-	lw	a1,-36(s0)
-	call	__subdf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a2,-64(s0)
-	lw	a3,-60(s0)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	mv	a0,a4
-	mv	a1,a5
-	lui	a5,%hi(.LC1)
-	lw	a2,%lo(.LC1)(a5)
-	lw	a3,%lo(.LC1+4)(a5)
-	call	__adddf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a3,-72(s0)
-	sw	a4,0(a3)
-	sw	a5,4(a3)
-	j	.L31
-.L55:
-	lw	a2,-32(s0)
-	lw	a3,-28(s0)
-	lw	a0,-24(s0)
-	lw	a1,-20(s0)
-	call	__subdf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a2,-64(s0)
-	lw	a3,-60(s0)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	mv	a0,a4
-	mv	a1,a5
-	lui	a5,%hi(.LC4)
-	lw	a2,%lo(.LC4)(a5)
-	lw	a3,%lo(.LC4+4)(a5)
-	call	__adddf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a3,-72(s0)
-	sw	a4,0(a3)
-	sw	a5,4(a3)
-.L31:
-	lw	a5,-72(s0)
-	lw	a4,0(a5)
-	lw	a5,4(a5)
-	lui	a3,%hi(.LC3)
-	lw	a2,%lo(.LC3)(a3)
-	lw	a3,%lo(.LC3+4)(a3)
-	mv	a0,a4
-	mv	a1,a5
-	call	__divdf3
-	mv	a4,a0
-	mv	a5,a1
-	lw	a3,-72(s0)
-	sw	a4,0(a3)
-	sw	a5,4(a3)
-.L56:
-	nop
-	lw	ra,76(sp)
-	lw	s0,72(sp)
-	lw	s2,68(sp)
-	lw	s3,64(sp)
-	addi	sp,sp,80
+	addi	sp,sp,-48
+	sw	ra,44(sp)
+	sw	s0,40(sp)
+	addi	s0,sp,48
+	sw	a0,-36(s0)
+	sw	a1,-40(s0)
+	lbu	a5,-36(s0)
+	sb	a5,-17(s0)
+	lbu	a5,-36(s0)
+	sb	a5,-18(s0)
+	lbu	a5,-35(s0)
+	lbu	a4,-17(s0)
+	bgeu	a4,a5,.L2
+	lbu	a5,-35(s0)
+	sb	a5,-17(s0)
+.L2:
+	lbu	a5,-34(s0)
+	lbu	a4,-17(s0)
+	bgeu	a4,a5,.L3
+	lbu	a5,-34(s0)
+	sb	a5,-17(s0)
+.L3:
+	lbu	a5,-35(s0)
+	lbu	a4,-18(s0)
+	bleu	a4,a5,.L4
+	lbu	a5,-35(s0)
+	sb	a5,-18(s0)
+.L4:
+	lbu	a5,-34(s0)
+	lbu	a4,-18(s0)
+	bleu	a4,a5,.L5
+	lbu	a5,-34(s0)
+	sb	a5,-18(s0)
+.L5:
+	lbu	a4,-17(s0)
+	lbu	a5,-18(s0)
+	add	a5,a4,a5
+	srai	a5,a5,1
+	andi	a4,a5,0xff
+	lw	a5,-40(s0)
+	sb	a4,2(a5)
+	lbu	a4,-17(s0)
+	lbu	a5,-18(s0)
+	bne	a4,a5,.L6
+	lw	a5,-40(s0)
+	sb	zero,1(a5)
+	lw	a5,-40(s0)
+	sb	zero,0(a5)
+	j	.L1
+.L6:
+	lbu	a5,-17(s0)
+	mv	a4,a5
+	lbu	a5,-18(s0)
+	sub	a5,a4,a5
+	andi	a4,a5,0xff
+	lw	a5,-40(s0)
+	sb	a4,1(a5)
+	lbu	a5,-36(s0)
+	lbu	a4,-17(s0)
+	bne	a4,a5,.L8
+	lbu	a4,-35(s0)
+	lbu	a5,-34(s0)
+	sub	a5,a4,a5
+	andi	a4,a5,0xff
+	lw	a5,-40(s0)
+	sb	a4,0(a5)
+	j	.L1
+.L8:
+	lbu	a5,-35(s0)
+	lbu	a4,-17(s0)
+	bne	a4,a5,.L9
+	lbu	a4,-34(s0)
+	lbu	a5,-36(s0)
+	sub	a5,a4,a5
+	andi	a5,a5,0xff
+	addi	a5,a5,85
+	andi	a4,a5,0xff
+	lw	a5,-40(s0)
+	sb	a4,0(a5)
+	j	.L1
+.L9:
+	lbu	a4,-36(s0)
+	lbu	a5,-35(s0)
+	sub	a5,a4,a5
+	andi	a5,a5,0xff
+	addi	a5,a5,-86
+	andi	a4,a5,0xff
+	lw	a5,-40(s0)
+	sb	a4,0(a5)
+.L1:
+	lw	ra,44(sp)
+	lw	s0,40(sp)
+	addi	sp,sp,48
 	jr	ra
 	.size	RGBtoHSL, .-RGBtoHSL
 	.align	2
 	.globl	main
 	.type	main, @function
 main:
-	addi	sp,sp,-48
-	sw	ra,44(sp)
-	sw	s0,40(sp)
-	addi	s0,sp,48
+	addi	sp,sp,-32
+	sw	ra,28(sp)
+	sw	s0,24(sp)
+	addi	s0,sp,32
 	li	a5,-1
 	sb	a5,-20(s0)
 	sb	zero,-19(s0)
 	sb	zero,-18(s0)
-	addi	a5,s0,-48
+	addi	a5,s0,-24
 	mv	a1,a5
 	lw	a0,-20(s0)
 	call	RGBtoHSL
-	li	a5,0
+	lbu	a4,-24(s0)
+	lbu	a5,-23(s0)
+	add	a5,a4,a5
+	andi	a4,a5,0xff
+	lbu	a5,-22(s0)
+	add	a5,a4,a5
+	andi	a4,a5,0xff
+	lui	a5,%hi(sink)
+	sb	a4,%lo(sink)(a5)
+	li	a5,255
+	li	a4,1
+	sb	a4,0(a5)
+	lui	a5,%hi(sink)
+	lbu	a5,%lo(sink)(a5)
+	andi	a5,a5,0xff
 	mv	a0,a5
-	lw	ra,44(sp)
-	lw	s0,40(sp)
-	addi	sp,sp,48
+	lw	ra,28(sp)
+	lw	s0,24(sp)
+	addi	sp,sp,32
 	jr	ra
 	.size	main, .-main
-	.section	.rodata
-	.align	3
-.LC0:
-	.word	0
-	.word	1081073664
-	.align	3
-.LC1:
-	.word	0
-	.word	1073741824
-	.align	3
-.LC2:
-	.word	0
-	.word	1071644672
-	.align	3
-.LC3:
-	.word	0
-	.word	1075314688
-	.align	3
-.LC4:
-	.word	0
-	.word	1074790400
-	.globl	__subdf3
-	.globl	__eqdf2
-	.globl	__adddf3
-	.globl	__ltdf2
-	.globl	__gtdf2
-	.globl	__divdf3
-	.globl	__floatsidf
 	.ident	"GCC: (14.2.0+19) 14.2.0"
 	.section	.note.GNU-stack,"",@progbits

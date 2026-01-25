@@ -8,5 +8,6 @@ int main(void) {
         acc += i;
     }
     sink = acc;
+    *(volatile uint8_t *)0xFF = 1;
     return 0;
 }

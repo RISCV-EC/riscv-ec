@@ -4,35 +4,36 @@ typedef struct {
 } RGBColor;
 
 typedef struct {
-    double h, s, l;
+    unsigned char h, s, l;
 } HSLColor;
 
-void RGBtoHSL(RGBColor rgb, HSLColor *hsl) {
-    double r = rgb.r / 255.0;
-    double g = rgb.g / 255.0;
-    double b = rgb.b / 255.0;
+volatile unsigned char sink;
 
-    double max = (r > g) ? ((r > b) ? r : b) : ((g > b) ? g : b);
-    double min = (r < g) ? ((r < b) ? r : b) : ((g < b) ? g : b);
+static void RGBtoHSL(RGBColor rgb, HSLColor *hsl) {
+    unsigned char max = rgb.r;
+    unsigned char min = rgb.r;
 
-    hsl->l = (max + min) / 2.0;
+    if (rgb.g > max) max = rgb.g;
+    if (rgb.b > max) max = rgb.b;
+    if (rgb.g < min) min = rgb.g;
+    if (rgb.b < min) min = rgb.b;
+
+    hsl->l = (unsigned char)((max + min) >> 1);
 
     if (max == min) {
-        hsl->s = 0.0;
-        hsl->h = 0.0; // undefined, but set to 0
+        hsl->s = 0;
+        hsl->h = 0;
+        return;
+    }
+
+    hsl->s = (unsigned char)(max - min);
+
+    if (max == rgb.r) {
+        hsl->h = (unsigned char)(rgb.g - rgb.b);
+    } else if (max == rgb.g) {
+        hsl->h = (unsigned char)(rgb.b - rgb.r + 85);
     } else {
-        double d = max - min;
-        hsl->s = (hsl->l > 0.5) ? (d / (2.0 - max - min)) : (d / (max + min));
-
-        if (max == r) {
-            hsl->h = (g - b) / d + ((g < b) ? 6.0 : 0.0);
-        } else if (max == g) {
-            hsl->h = (b - r) / d + 2.0;
-        } else {
-            hsl->h = (r - g) / d + 4.0;
-        }
-
-        hsl->h /= 6.0;
+        hsl->h = (unsigned char)(rgb.r - rgb.g + 170);
     }
 }
 
@@ -41,6 +42,8 @@ int main() {
     HSLColor hsl;
 
     RGBtoHSL(rgb, &hsl);
+    sink = (unsigned char)(hsl.h + hsl.s + hsl.l);
+    *(volatile unsigned char *)0xFF = 1;
 
-    return 0;
+    return (int)sink;
 }

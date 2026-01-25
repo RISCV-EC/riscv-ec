@@ -15,8 +15,6 @@ VL_INLINE_OPT VlCoroutine Vtb_rvec32i___024root___eval_initial__TOP__Vtiming__1(
     std::string tb_rvec32i__DOT__kernel_s;
     std::string tb_rvec32i__DOT__kernel_obj;
     std::string tb_rvec32i__DOT__command;
-    IData/*31:0*/ tb_rvec32i__DOT__unnamedblk1_1__DOT____Vrepeat0;
-    tb_rvec32i__DOT__unnamedblk1_1__DOT____Vrepeat0 = 0;
     VlWide<3>/*95:0*/ __Vtemp_1;
     // Body
     tb_rvec32i__DOT__kernel_s = std::string{"Algorithms/rv32i/count_up.s"};
@@ -31,17 +29,17 @@ VL_INLINE_OPT VlCoroutine Vtb_rvec32i___024root___eval_initial__TOP__Vtiming__1(
                                                 -1,
                                                 &(tb_rvec32i__DOT__kernel_s)) ;
     if (VL_UNLIKELY((0U != VL_SYSTEM_IN(tb_rvec32i__DOT__command)))) {
-        VL_WRITEF_NX("[%0t] %%Fatal: tb_rvec32i.sv:45: Assertion failed in %Ntb_rvec32i: Failed to assemble kernel: %@\n",0,
+        VL_WRITEF_NX("[%0t] %%Fatal: tb_rvec32i.sv:47: Assertion failed in %Ntb_rvec32i: Failed to assemble kernel: %@\n",0,
                      64,VL_TIME_UNITED_Q(1000),-9,vlSymsp->name(),
                      -1,&(tb_rvec32i__DOT__kernel_s));
-        VL_STOP_MT("tb_rvec32i.sv", 45, "", false);
+        VL_STOP_MT("tb_rvec32i.sv", 47, "", false);
     }
     tb_rvec32i__DOT__command = std::string{"riscv64-unknown-elf-objcopy -O verilog --verilog-data-width=4 -j .text sim/kernel.o sim/kernel.hex"};
     if (VL_UNLIKELY((0U != VL_SYSTEM_IN(std::string{"riscv64-unknown-elf-objcopy -O verilog --verilog-data-width=4 -j .text sim/kernel.o sim/kernel.hex"})))) {
-        VL_WRITEF_NX("[%0t] %%Fatal: tb_rvec32i.sv:54: Assertion failed in %Ntb_rvec32i: Failed to generate hex from: %@\n",0,
+        VL_WRITEF_NX("[%0t] %%Fatal: tb_rvec32i.sv:56: Assertion failed in %Ntb_rvec32i: Failed to generate hex from: %@\n",0,
                      64,VL_TIME_UNITED_Q(1000),-9,vlSymsp->name(),
                      -1,&(tb_rvec32i__DOT__kernel_obj));
-        VL_STOP_MT("tb_rvec32i.sv", 54, "", false);
+        VL_STOP_MT("tb_rvec32i.sv", 56, "", false);
     }
     VL_READMEM_N(true, 32, 256, 0, std::string{"sim/kernel.hex"}
                  ,  &(vlSelfRef.tb_rvec32i__DOT__dut__DOT__prog_m_0__DOT__mem)
@@ -51,22 +49,28 @@ VL_INLINE_OPT VlCoroutine Vtb_rvec32i___024root___eval_initial__TOP__Vtiming__1(
     vlSelfRef.tb_rvec32i__DOT__cycle_count = 0ULL;
     vlSelfRef.tb_rvec32i__DOT__instr_count = 0ULL;
     vlSelfRef.tb_rvec32i__DOT__last_pc = vlSelfRef.tb_rvec32i__DOT__dut__DOT__cont_0_sal;
-    tb_rvec32i__DOT__unnamedblk1_1__DOT____Vrepeat0 = 0xc8U;
-    while (VL_LTS_III(32, 0U, tb_rvec32i__DOT__unnamedblk1_1__DOT____Vrepeat0)) {
+    vlSelfRef.tb_rvec32i__DOT__done = 0U;
+    vlSelfRef.tb_rvec32i__DOT__unnamedblk1__DOT__i = 0U;
+    while (((0x2710U > vlSelfRef.tb_rvec32i__DOT__unnamedblk1__DOT__i) 
+            & (~ (IData)(vlSelfRef.tb_rvec32i__DOT__done)))) {
         co_await vlSelfRef.__VtrigSched_h1b7725ae__0.trigger(0U, 
                                                              nullptr, 
                                                              "@(posedge tb_rvec32i.clk)", 
                                                              "tb_rvec32i.sv", 
-                                                             63);
-        tb_rvec32i__DOT__unnamedblk1_1__DOT____Vrepeat0 
-            = (tb_rvec32i__DOT__unnamedblk1_1__DOT____Vrepeat0 
-               - (IData)(1U));
+                                                             67);
+        vlSelfRef.__Vm_traceActivity[2U] = 1U;
+        vlSelfRef.tb_rvec32i__DOT__unnamedblk1__DOT__i 
+            = ((IData)(1U) + vlSelfRef.tb_rvec32i__DOT__unnamedblk1__DOT__i);
     }
     co_await vlSelfRef.__VtrigSched_h1b77266f__0.trigger(0U, 
                                                          nullptr, 
                                                          "@(negedge tb_rvec32i.clk)", 
                                                          "tb_rvec32i.sv", 
-                                                         64);
+                                                         69);
+    vlSelfRef.__Vm_traceActivity[2U] = 1U;
+    if (VL_UNLIKELY((1U & (~ (IData)(vlSelfRef.tb_rvec32i__DOT__done))))) {
+        VL_WRITEF_NX("timeout after 10000 cycles\n",0);
+    }
     VL_WRITEF_NX("cycles=%0# instructions=%0# ipc=%0f\n",0,
                  64,vlSelfRef.tb_rvec32i__DOT__cycle_count,
                  64,vlSelfRef.tb_rvec32i__DOT__instr_count,
@@ -74,7 +78,8 @@ VL_INLINE_OPT VlCoroutine Vtb_rvec32i___024root___eval_initial__TOP__Vtiming__1(
                       ? (VL_ITOR_D_Q(64, vlSelfRef.tb_rvec32i__DOT__instr_count) 
                          / VL_ITOR_D_Q(64, vlSelfRef.tb_rvec32i__DOT__cycle_count))
                       : 0.0));
-    VL_FINISH_MT("tb_rvec32i.sv", 68, "");
+    VL_FINISH_MT("tb_rvec32i.sv", 76, "");
+    vlSelfRef.__Vm_traceActivity[2U] = 1U;
 }
 
 #ifdef VL_DEBUG

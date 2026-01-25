@@ -213,6 +213,7 @@ VL_ATTR_COLD void Vtb_rvec32i___024root____Vm_traceActivitySetAll(Vtb_rvec32i___
     vlSelfRef.__Vm_traceActivity[2U] = 1U;
     vlSelfRef.__Vm_traceActivity[3U] = 1U;
     vlSelfRef.__Vm_traceActivity[4U] = 1U;
+    vlSelfRef.__Vm_traceActivity[5U] = 1U;
 }
 
 VL_ATTR_COLD void Vtb_rvec32i___024root___ctor_var_reset(Vtb_rvec32i___024root* vlSelf) {
@@ -225,6 +226,8 @@ VL_ATTR_COLD void Vtb_rvec32i___024root___ctor_var_reset(Vtb_rvec32i___024root* 
     vlSelf->tb_rvec32i__DOT__cycle_count = 0;
     vlSelf->tb_rvec32i__DOT__instr_count = 0;
     vlSelf->tb_rvec32i__DOT__last_pc = VL_RAND_RESET_I(13);
+    vlSelf->tb_rvec32i__DOT__done = VL_RAND_RESET_I(1);
+    vlSelf->tb_rvec32i__DOT__unnamedblk1__DOT__i = 0;
     vlSelf->tb_rvec32i__DOT__dut__DOT__cu_alu2reg = VL_RAND_RESET_I(1);
     vlSelf->tb_rvec32i__DOT__dut__DOT__cu_alu_op = VL_RAND_RESET_I(4);
     vlSelf->tb_rvec32i__DOT__dut__DOT__cu_alu_scr = VL_RAND_RESET_I(1);
@@ -257,7 +260,7 @@ VL_ATTR_COLD void Vtb_rvec32i___024root___ctor_var_reset(Vtb_rvec32i___024root* 
     vlSelf->tb_rvec32i__DOT__dut__DOT__reg_b_0__DOT__i = VL_RAND_RESET_I(32);
     vlSelf->tb_rvec32i__DOT__dut__DOT__sign_oe_0__DOT__temp = VL_RAND_RESET_I(13);
     vlSelf->__Vtrigprevexpr___TOP__tb_rvec32i__DOT__clk__0 = VL_RAND_RESET_I(1);
-    for (int __Vi0 = 0; __Vi0 < 5; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 6; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
     }
 }

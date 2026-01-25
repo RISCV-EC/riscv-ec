@@ -38,6 +38,9 @@ main:
 	lui	a5,%hi(sink)
 	lw	a4,-20(s0)
 	sw	a4,%lo(sink)(a5)
+	li	a5,255
+	li	a4,1
+	sb	a4,0(a5)
 	li	a5,0
 	mv	a0,a5
 	lw	ra,28(sp)

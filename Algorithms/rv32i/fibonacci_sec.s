@@ -59,6 +59,9 @@ main:
 	lw	a4,-20(s0)
 	li	a5,99
 	ble	a4,a5,.L3
+	li	a5,255
+	li	a4,1
+	sb	a4,0(a5)
 	li	a5,0
 	mv	a0,a5
 	lw	ra,828(sp)

@@ -14,6 +14,8 @@ module tb_rvec32i;
     longint unsigned cycle_count;
     longint unsigned instr_count;
     logic [12:0] last_pc;
+    logic        done;
+    localparam int unsigned MAX_CYCLES = 10000;
 
     rvec32i dut(
         .alua   (alua),
@@ -60,8 +62,14 @@ module tb_rvec32i;
         cycle_count = 0;
         instr_count = 0;
         last_pc = cont_p;
-        repeat (200) @(posedge clk);
+        done = 1'b0;
+        for (int unsigned i = 0; i < MAX_CYCLES && !done; i++) begin
+            @(posedge clk);
+        end
         @(negedge clk);
+        if (!done) begin
+            $display("timeout after %0d cycles", MAX_CYCLES);
+        end
         $display("cycles=%0d instructions=%0d ipc=%0f",
                  cycle_count, instr_count,
                  (cycle_count > 0) ? (real'(instr_count) / real'(cycle_count)) : 0.0);
@@ -74,5 +82,8 @@ module tb_rvec32i;
             instr_count <= instr_count + 1;
         end
         last_pc <= cont_p;
+        if (dut.data_m_0.we && dut.data_m_0.addr == 8'hFF) begin
+            done <= 1'b1;
+        end
     end
 endmodule

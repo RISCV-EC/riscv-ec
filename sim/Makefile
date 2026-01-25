@@ -34,7 +34,13 @@ $(OUT): $(SV_SRCS)
 		-o $(OUT) $(SV_SRCS)
 
 run: $(OUT)
-	./obj_dir/$(OUT)
+	cd .. && ./sim/obj_dir/$(OUT)
+
+run_all: $(OUT)
+	cd .. && for k in Algorithms/rv32i/*.s; do \
+		printf "**************************************************\n* Running %s\n**************************************************\n" "$$k"; \
+		./sim/obj_dir/$(OUT) +KERNEL=$$k || exit $$?; \
+	done
 
 clean:
 	rm -rf obj_dir wave.vcd

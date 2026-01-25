@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 int main() {
     long long int fib[100]; // To hold the first 100 Fibonacci numbers
     int i;
@@ -10,5 +12,6 @@ int main() {
     }
 
 
+    *(volatile uint8_t *)0xFF = 1;
     return 0;
 }
