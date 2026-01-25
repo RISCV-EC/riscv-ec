@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: mux_c.sv - Branch/PC mux selecting target or increment.
+
 `timescale 1ns/1ps
 module mux_c(
     input  logic [12:0] a,

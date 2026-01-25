@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: prog_m.sv - Instruction ROM and field extraction.
+
 `timescale 1ns/1ps
 module prog_m(
     input  logic [12:0] a,

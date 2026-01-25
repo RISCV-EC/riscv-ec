@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: CU.sv - Control unit: decodes instruction fields and generates control signals.
+
 `timescale 1ns/1ps
 module CU(
     input  logic [6:0] opcode,

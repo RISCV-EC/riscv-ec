@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// Kernel: fibonacci_sec - computes first 100 Fibonacci numbers.
+
 #include <stdint.h>
 
 int main() {

@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: tb_rvec32i.sv - Verilator testbench and simulation metrics.
+
 `timescale 1ns/1ps
 
 module tb_rvec32i;

@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// Kernel: rgb_hlb - RGB to HSL (compact fixed-point) example.
+
 
 typedef struct {
     unsigned char r, g, b;

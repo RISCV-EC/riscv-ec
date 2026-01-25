@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: sum.sv - 13-bit adder for PC/branch address.
+
 `timescale 1ns/1ps
 module sum(
     input  logic [12:0] a,

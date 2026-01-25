@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: rvec32i.sv - Top-level RISCV-EC core integration.
+
 `timescale 1ns/1ps
 module rvec32i(
     output logic [31:0] alua,

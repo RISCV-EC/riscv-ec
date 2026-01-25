@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// Kernel: mat_mult - 3x3 matrix multiplication example.
+
 
 #include <stdint.h>
 

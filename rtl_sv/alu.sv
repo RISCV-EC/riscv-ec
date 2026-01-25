@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: alu.sv - ALU operations for arithmetic and comparisons.
+
 `timescale 1ns/1ps
 module alu(
     input  logic [31:0] a1,

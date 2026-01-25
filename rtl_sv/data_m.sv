@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: data_m.sv - Data memory (256 x 32) with synchronous write.
+
 `timescale 1ns/1ps
 module data_m(
     input  logic [31:0] di,

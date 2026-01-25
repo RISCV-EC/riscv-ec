@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: reg_b.sv - Register file (32 x 32).
+
 `timescale 1ns/1ps
 module reg_b(
     input  logic [31:0] d1,

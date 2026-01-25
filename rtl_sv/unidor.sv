@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: unidor.sv - Concatenates instruction fields into a 12-bit value.
+
 `timescale 1ns/1ps
 module unidor(
     input  logic [6:0]  a1,

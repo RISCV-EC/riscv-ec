@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: decoder.sv - Concatenates instruction fields into a 12-bit immediate.
+
 `timescale 1ns/1ps
 module decoder(
     input  logic [6:0]  a1,

@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: cont.sv - Program counter register.
+
 `timescale 1ns/1ps
 module cont(
     input  logic        clk,

@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: generic_muc.sv - Parameterized 2:1 multiplexer.
+
 `timescale 1ns/1ps
 module gen_mux #(
     parameter int data_width = 4

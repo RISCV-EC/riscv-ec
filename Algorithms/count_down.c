@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// Kernel: count_down - accumulates 100..1 into a sum.
+
 #include <stdint.h>
 
 volatile uint32_t sink = 0;

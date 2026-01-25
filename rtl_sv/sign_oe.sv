@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: sign_oe.sv - Builds a branch offset from instruction fields.
+
 `timescale 1ns/1ps
 module sign_oe(
     input  logic [6:0]  i1,

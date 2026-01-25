@@ -16,6 +16,7 @@ This version corresponds to the architecture and performance analysis presented 
 - Performance Evaluation
 - Future Work
 - Repository
+- File Tree
 - Simulation with Verilator and GTKWave
 - Convert C Kernels to RISC-V Assembly
 - Citation
@@ -133,6 +134,10 @@ Notes:
 - Available kernels (from `Algorithms/`): `count_down`, `count_up`, `fibonacci_sec`, `mat_mult`, `rgb_hlb`.
 - `make -C sim` builds only; `make -C sim run` builds (if needed) and runs.
 - The testbench assembles the `.s` kernel, converts it to `kernel.hex`, loads it into instruction ROM (`prog_m_0.mem`), and runs until the kernel writes to `0xFF` (or a timeout). `sim/wave.vcd` is generated.
+  Example sentinel write in C:
+  ```c
+  *(volatile uint8_t *)0xFF = 1;
+  ```
 
 Expected console output (examples):
 ```
@@ -296,8 +301,26 @@ If you use this repository or reference its contents, please cite the following 
 
 ---
 
-## Keywords
-`RISC-V` · `Soft Processor` · `FPGA Implementation` · `Edge Computing` · `Low Power` · `Open Hardware`
+## File Tree
+```
+.
+├── Algorithms
+│   ├── rv32i
+│   ├── count_down.c
+│   ├── count_up.c
+│   ├── fibonacci_sec.c
+│   ├── mat_mult.c
+│   └── rgb_hlb.c
+├── convert_kernels.py
+├── docs
+├── LICENSE
+├── README.md
+├── rtl_sv
+├── rvec32i.sv
+├── sim
+│   └── obj_dir
+└── wave.vcd
+```
 
 ---
 

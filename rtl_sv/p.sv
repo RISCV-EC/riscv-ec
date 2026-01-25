@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: p.sv - Shift operation demo/test module.
+
 `timescale 1ns/1ps
 module btog;
     logic [3:0] din     = 4'b1010;

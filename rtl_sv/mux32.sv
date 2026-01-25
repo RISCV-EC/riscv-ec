@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: mux32.sv - 32-bit mux with constant fallback.
+
 `timescale 1ns/1ps
 module mux32(
     input  logic [31:0] a,

@@ -1,3 +1,6 @@
+// Core: RISCV-EC-v1.0
+// File: slicer.sv - Extracts the LSB for branch decisions.
+
 `timescale 1ns/1ps
 module slicer(
     input  logic [31:0] a,
