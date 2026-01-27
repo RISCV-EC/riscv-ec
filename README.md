@@ -1,5 +1,5 @@
 # RISCV-EC-v1.0.0
-![# RISCV-EC-v1.0.0](docs\RISCV-EC-v1.0.0.png)
+![# RISCV-EC-v1.0.0](docs/RISCV-EC-v1.0.0.png)
 
 The first Ecuadorian open-source RISC-V soft processor for Edge Computing applications.  
 This repository provides a SystemVerilog (SV) simulation of the RISCV-EC processor with additional benchmark kernels, simulated using Verilator. It is a continuation of the work presented in the 2025 publication:  
