@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0
+// Core: RISCV-EC-v1.0.0
 // File: prog_m.sv - Instruction ROM and field extraction.
 
 `timescale 1ns/1ps

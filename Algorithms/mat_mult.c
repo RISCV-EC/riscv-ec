@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0
+// Core: RISCV-EC-v1.0.0
 // Kernel: mat_mult - 3x3 matrix multiplication example.
 
 

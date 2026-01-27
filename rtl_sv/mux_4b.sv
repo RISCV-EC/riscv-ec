@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0
+// Core: RISCV-EC-v1.0.0
 // File: mux_4b.sv - 5-bit 2:1 multiplexer.
 
 `timescale 1ns/1ps

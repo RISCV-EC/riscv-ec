@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0
+// Core: RISCV-EC-v1.0.0
 // File: alu.sv - ALU operations for arithmetic and comparisons.
 
 `timescale 1ns/1ps

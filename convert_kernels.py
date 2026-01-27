@@ -4,6 +4,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
+# // Core: RISCV-EC-v1.0.0
+# Converts all .c kernels under the input directory to RISC-V assembly using the selected GCC toolchain.
+
 def find_toolchain(explicit: str | None) -> str:
     if explicit:
         return explicit

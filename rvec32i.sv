@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0
+// Core: RISCV-EC-v1.0.0
 // File: rvec32i.sv - Top-level RISCV-EC core integration.
 
 `timescale 1ns/1ps

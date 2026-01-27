@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0
+// Core: RISCV-EC-v1.0.0
 // Kernel: count_down - accumulates 100..1 into a sum.
 
 #include <stdint.h>
