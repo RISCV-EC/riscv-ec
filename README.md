@@ -1,5 +1,5 @@
 
-<img width="862" height="507" alt="RISCV-EC-v1 0" src="https://github.com/user-attachments/assets/5183dcd6-32d4-4fb0-a4b5-6f257f3d20bf" />
+<img width="862" height="507" alt="RISCV-EC-v1 0" src="https://github.com/user-attachments/assets/1f9df197-315c-4ee3-b72e-e9226ee3387c" />
 
 
 # RISCV-EC-v1.0
