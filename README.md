@@ -2,7 +2,7 @@
 <img width="862" height="507" alt="RISCV-EC-v1 0" src="https://github.com/user-attachments/assets/1f9df197-315c-4ee3-b72e-e9226ee3387c" />
 
 
-# RISCV-EC-v1.0
+# RISCV-EC-v1.0.0
 The first Ecuadorian open-source RISC-V soft processor for Edge Computing applications.  
 This repository provides a SystemVerilog (SV) simulation of the RISCV-EC processor with additional benchmark kernels, simulated using Verilator. It is a continuation of the work presented in the 2025 publication:  
 This version corresponds to the architecture and performance analysis presented in the 2025 publication:  
@@ -25,7 +25,7 @@ This version corresponds to the architecture and performance analysis presented 
 ---
 
 ## Overview
-**RISCV-EC-v1.0** is a soft processor based on a **5-stage, multi-cycle, non-pipelined architecture** implemented in **VHDL** for FPGA devices.  
+**RISCV-EC-v1.0.0** is a soft processor based on a **5-stage, multi-cycle, non-pipelined architecture** implemented in **VHDL** for FPGA devices.  
 It executes each instruction in its entirety before proceeding to the next, focusing on **instruction efficiency**, **execution speed**, and **power-performance balance** for **edge computing** environments.
 
 This repository also provides a SystemVerilog simulation flow using Verilator, with waveform inspection in GTKWave.  
