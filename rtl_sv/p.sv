@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: p.sv - Shift operation demo/test module.
 
 `timescale 1ns/1ps

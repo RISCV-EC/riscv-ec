@@ -1,9 +1,16 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: prog_m.sv - Instruction ROM and field extraction.
 
 `timescale 1ns/1ps
 module prog_m(
+    input  logic        clk,
+    input  logic        req,
+    input  logic [31:0] addr,
+    output logic        gnt,
+    output logic        rvalid,
+    output logic [31:0] rdata,
     input  logic [12:0] a,
+    output logic [31:0] instr,
     output logic [6:0]  funct7,
     output logic [4:0]  rs2,
     output logic [4:0]  rs1,
@@ -12,7 +19,6 @@ module prog_m(
     output logic [6:0]  opcode
 );
     logic [31:0] mem [0:255];
-    logic [31:0] instr;
 
     integer i;
     initial begin
@@ -30,6 +36,7 @@ module prog_m(
         mem[8] = 32'b11111110000000011100110111100011;
     end
 
+    assign gnt    = 1'b1;
     assign instr  = mem[a[7:0]];
     assign funct7 = instr[31:25];
     assign rs2    = instr[24:20];
@@ -37,4 +44,11 @@ module prog_m(
     assign func3  = instr[14:12];
     assign rd     = instr[11:7];
     assign opcode = instr[6:0];
+
+    always_ff @(posedge clk) begin
+        rvalid <= req;
+        if (req) begin
+            rdata <= mem[addr[9:2]];
+        end
+    end
 endmodule

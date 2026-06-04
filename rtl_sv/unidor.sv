@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: unidor.sv - Concatenates instruction fields into a 12-bit value.
 
 `timescale 1ns/1ps

@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // Kernel: rgb_hlb - RGB to HSL (compact fixed-point) example.
 
 

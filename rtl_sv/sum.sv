@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: sum.sv - 13-bit adder for PC/branch address.
 
 `timescale 1ns/1ps

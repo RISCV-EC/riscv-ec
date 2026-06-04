@@ -1,32 +1,57 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: tb_rvec32i.sv - Verilator testbench and simulation metrics.
 
 `timescale 1ns/1ps
 
-module tb_rvec32i;
+module tb_rvec32i #(
+    parameter bit ENABLE_PREFETCH = 1'b1,
+    parameter int unsigned PREFETCH_DEPTH = 2
+);
     logic        clk;
+    logic        rst_n;
     logic [31:0] alua;
     logic [31:0] alub;
     logic [12:0] cont_p;
     logic [31:0] sal_alu;
     logic [12:0] valor;
+    logic [63:0] cycle_count;
+    logic [63:0] instr_count;
+    logic [63:0] imem_req_count;
+    logic [63:0] imem_stall_count;
+    logic [63:0] prefetch_hit_count;
+    logic [63:0] prefetch_empty_count;
+    logic [63:0] flush_count;
+    logic [63:0] branch_count;
+    logic [63:0] taken_branch_count;
     string       kernel_s;
     string       kernel_obj;
     string       kernel_hex;
     string       command;
-    longint unsigned cycle_count;
-    longint unsigned instr_count;
-    logic [12:0] last_pc;
     logic        done;
-    localparam int unsigned MAX_CYCLES = 10000;
+    int unsigned max_cycles;
+    localparam int unsigned DEFAULT_MAX_CYCLES = 50000;
 
-    rvec32i dut(
-        .alua   (alua),
-        .alub   (alub),
-        .clk    (clk),
-        .cont_p (cont_p),
-        .sal_alu(sal_alu),
-        .valor  (valor)
+    rvec32i #(
+        .ENABLE_PREFETCH (ENABLE_PREFETCH),
+        .PREFETCH_DEPTH  (PREFETCH_DEPTH),
+        .RESET_VECTOR    (32'h0000_0000)
+    ) dut (
+        .alua                 (alua),
+        .alub                 (alub),
+        .clk                  (clk),
+        .rst_n                (rst_n),
+        .cont_p               (cont_p),
+        .sal_alu              (sal_alu),
+        .valor                (valor),
+        .cycle_count          (cycle_count),
+        .instr_count          (instr_count),
+        .imem_req_count       (imem_req_count),
+        .imem_stall_count     (imem_stall_count),
+        .prefetch_hit_count   (prefetch_hit_count),
+        .prefetch_empty_count (prefetch_empty_count),
+        .flush_count          (flush_count),
+        .branch_count         (branch_count),
+        .taken_branch_count   (taken_branch_count)
     );
 
     initial begin
@@ -35,11 +60,15 @@ module tb_rvec32i;
     end
 
     initial begin
-        kernel_s   = "Algorithms/rv32i/count_up.s"; //<------- default
+        rst_n      = 1'b0;
+        done       = 1'b0;
+        kernel_s   = "Algorithms/rv32i/count_up.s";
         kernel_obj = "sim/kernel.o";
         kernel_hex = "sim/kernel.hex";
-        if ($value$plusargs("KERNEL=%s", kernel_s)) begin
-        end
+        max_cycles = DEFAULT_MAX_CYCLES;
+
+        void'($value$plusargs("KERNEL=%s", kernel_s));
+        void'($value$plusargs("MAX_CYCLES=%d", max_cycles));
 
         command = $sformatf(
             "riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -nostdlib -ffreestanding -c %s -o %s",
@@ -60,32 +89,43 @@ module tb_rvec32i;
         end
 
         $readmemh(kernel_hex, dut.prog_m_0.mem);
-        $dumpfile("wave.vcd");
+        $dumpfile(ENABLE_PREFETCH ? "sim/wave_pf.vcd" : "sim/wave_base.vcd");
         $dumpvars(0, tb_rvec32i);
-        cycle_count = 0;
-        instr_count = 0;
-        last_pc = cont_p;
-        done = 1'b0;
-        for (int unsigned i = 0; i < MAX_CYCLES && !done; i++) begin
+
+        repeat (3) @(posedge clk);
+        rst_n = 1'b1;
+
+        for (int unsigned i = 0; i < max_cycles && !done; i++) begin
             @(posedge clk);
         end
         @(negedge clk);
+
         if (!done) begin
-            $display("timeout after %0d cycles", MAX_CYCLES);
+            $display("timeout after %0d cycles", max_cycles);
         end
-        $display("cycles=%0d instructions=%0d ipc=%0f",
-                 cycle_count, instr_count,
-                 (cycle_count > 0) ? (real'(instr_count) / real'(cycle_count)) : 0.0);
+
+        $display("RESULT config=%s depth=%0d kernel=%s cycles=%0d instructions=%0d cpi=%0f imem_req=%0d imem_stall=%0d prefetch_hit=%0d prefetch_empty=%0d flush=%0d branch=%0d taken_branch=%0d done=%0d",
+                 ENABLE_PREFETCH ? "RISCV-EC-v1.1.0-PF" : "RISCV-EC-v1.0.0",
+                 PREFETCH_DEPTH,
+                 kernel_s,
+                 cycle_count,
+                 instr_count,
+                 (instr_count > 0) ? (real'(cycle_count) / real'(instr_count)) : 0.0,
+                 imem_req_count,
+                 imem_stall_count,
+                 prefetch_hit_count,
+                 prefetch_empty_count,
+                 flush_count,
+                 branch_count,
+                 taken_branch_count,
+                 done);
         $finish;
     end
 
     always_ff @(posedge clk) begin
-        cycle_count <= cycle_count + 1;
-        if (cont_p != last_pc) begin
-            instr_count <= instr_count + 1;
-        end
-        last_pc <= cont_p;
-        if (dut.data_m_0.we && dut.data_m_0.addr == 8'hFF) begin
+        if (!rst_n) begin
+            done <= 1'b0;
+        end else if (dut.data_m_0.we && dut.data_m_0.addr == 8'hFF) begin
             done <= 1'b1;
         end
     end

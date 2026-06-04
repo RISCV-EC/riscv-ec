@@ -1,9 +1,13 @@
 VERILATOR ?= verilator
 TOP       ?= tb_rvec32i
-OUT       ?= simv
+PREFETCH  ?= 1
+DEPTH     ?= 2
+OUT       ?= simv_pf_d$(DEPTH)
+OBJ_DIR   ?= obj_dir_pf_d$(DEPTH)
 
 SV_SRCS := \
 	../rvec32i.sv \
+	../rtl_sv/instruction_prefetch_buffer.sv \
 	../rtl_sv/alu.sv \
 	../rtl_sv/CU.sv \
 	../rtl_sv/cont.sv \
@@ -30,17 +34,35 @@ all: $(OUT)
 $(OUT): $(SV_SRCS)
 	$(VERILATOR) -Wall --trace --timing --language 1800-2017 \
 		-Wno-DECLFILENAME -Wno-UNUSEDSIGNAL \
-		--top-module $(TOP) --binary --Mdir obj_dir \
+		-GENABLE_PREFETCH=$(PREFETCH) -GPREFETCH_DEPTH=$(DEPTH) \
+		--top-module $(TOP) --binary --Mdir $(OBJ_DIR) \
 		-o $(OUT) $(SV_SRCS)
 
 run: $(OUT)
-	cd .. && ./sim/obj_dir/$(OUT)
+	cd .. && ./sim/$(OBJ_DIR)/$(OUT)
 
-run_all: $(OUT)
+run_all: run_all_pf
+
+base:
+	$(MAKE) PREFETCH=0 DEPTH=2 OUT=simv_base OBJ_DIR=obj_dir_base all
+
+pf:
+	$(MAKE) PREFETCH=1 DEPTH=$(DEPTH) OUT=simv_pf_d$(DEPTH) OBJ_DIR=obj_dir_pf_d$(DEPTH) all
+
+run_base: base
 	cd .. && for k in Algorithms/rv32i/*.s; do \
-		printf "**************************************************\n* Running %s\n**************************************************\n" "$$k"; \
-		./sim/obj_dir/$(OUT) +KERNEL=$$k || exit $$?; \
+		printf "**************************************************\n* Running base %s\n**************************************************\n" "$$k"; \
+		./sim/obj_dir_base/simv_base +KERNEL=$$k || exit $$?; \
 	done
 
+run_all_pf: pf
+	cd .. && for k in Algorithms/rv32i/*.s; do \
+		printf "**************************************************\n* Running PF DEPTH=$(DEPTH) %s\n**************************************************\n" "$$k"; \
+		./sim/obj_dir_pf_d$(DEPTH)/simv_pf_d$(DEPTH) +KERNEL=$$k || exit $$?; \
+	done
+
+benchmark:
+	python3 run_benchmarks.py
+
 clean:
-	rm -rf obj_dir wave.vcd
+	rm -rf obj_dir* wave.vcd wave_base.vcd wave_pf.vcd

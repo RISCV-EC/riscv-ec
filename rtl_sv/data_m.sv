@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: data_m.sv - Data memory (256 x 32) with synchronous write.
 
 `timescale 1ns/1ps

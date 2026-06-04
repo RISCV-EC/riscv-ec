@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: sign_e.sv - Sign-extends a 12-bit immediate to 32 bits.
 
 `timescale 1ns/1ps

@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: reg_b.sv - Register file (32 x 32).
 
 `timescale 1ns/1ps

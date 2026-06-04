@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // Kernel: fibonacci_sec - computes first 100 Fibonacci numbers.
 
 #include <stdint.h>

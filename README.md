@@ -1,9 +1,9 @@
-# RISCV-EC-v1.0.0
+# RISCV-EC-v1.1.0-PF
 ![# RISCV-EC-v1.0.0](docs/RISCV-EC-v1.0.0.png)
 
 The first Ecuadorian open-source RISC-V soft processor for Edge Computing applications.  
 This repository provides a SystemVerilog (SV) simulation of the RISCV-EC processor with additional benchmark kernels, simulated using Verilator. It is a continuation of the work presented in the 2025 publication:  
-This version corresponds to the architecture and performance analysis presented in the 2025 publication:  
+The base `RISCV-EC-v1.0.0` version corresponds to the architecture and performance analysis presented in the 2025 publication. This branch introduces the `RISCV-EC-v1.1.0-PF` prefetch-buffer variant for simulation comparison.  
 **“Evaluating the RISCV-EC: A Comparative Analysis of Instruction Efficiency and Power Performance for Edge Computing.”**
 
 ---
@@ -11,6 +11,7 @@ This version corresponds to the architecture and performance analysis presented 
 ## Contents
 - Overview
 - Microarchitecture
+- RISCV-EC-v1.1.0-PF Variant
 - Performance Evaluation
 - Future Work
 - Repository
@@ -45,6 +46,22 @@ RISCV-EC follows the standard **RISC-V single-core ISA** and includes the follow
 - **Register File:** `reg_b.sv` implements 32 32-bit registers (`mem[0:31]`).  
 - **Control Unit:** `CU.sv` decodes `opcode/func3/func7` and generates control signals.  
 - **Multiplexers:** `mux2_1.sv`, `mux32.sv`, `mux_4b.sv`, `mux_c.sv` route data between immediates, registers, and memory.
+
+---
+
+## RISCV-EC-v1.1.0-PF Variant
+**RISCV-EC-v1.1.0-PF** is an incremental frontend variant that preserves the original RISCV-EC identity: RV32I-oriented, no MMU, no instruction cache, no data cache, and no advanced branch predictor.
+
+The variant adds a small `instruction_prefetch_buffer` between the instruction ROM and the fetch/decode path. The buffer stores prefetched instructions with their byte PC, issues sequential requests while FIFO space is available, and flushes on taken branches using the redirected PC.
+
+Default configuration:
+- `ENABLE_PREFETCH = 1`
+- `PREFETCH_DEPTH = 2`
+- `RESET_VECTOR = 0x00000000`
+
+The base configuration can still be built with `ENABLE_PREFETCH = 0` for direct comparison against RISCV-EC without prefetch.
+
+More implementation notes are available in [`docs/RISCV-EC-PF.md`](docs/RISCV-EC-PF.md).
 
 ---
 
@@ -86,7 +103,21 @@ The following RV32I instructions are implemented in this version. Instruction de
 
 ## Performance Evaluation
 ### RISCV-EC Benchmark Metrics (Simulation)
-Metrics are collected in the testbench (`sim/tb_rvec32i.sv`). Cycles are counted on each positive clock edge, instructions are counted when the PC changes, and IPC is computed as `instructions / cycles`. The simulation stops when the kernel writes to data memory address `0xFF` (sentinel), or at a timeout if the sentinel is never written.
+Metrics are collected in the testbench (`sim/tb_rvec32i.sv`). The simulation stops when the kernel writes to data memory address `0xFF` (sentinel), or at a timeout if the sentinel is never written.
+
+The current testbench reports:
+- `cycle_count`
+- `instr_count`
+- `imem_req_count`
+- `imem_stall_count`
+- `prefetch_hit_count`
+- `prefetch_empty_count`
+- `flush_count`
+- `branch_count`
+- `taken_branch_count`
+
+The historical RISCV-EC baseline metrics below were collected before the prefetch frontend was added:
+
 | Kernel | Cycles | Instructions | IPC |
 | --- | --- | --- | --- |
 | `count_down` | 24 | 23 | 0.958333 |
@@ -94,6 +125,17 @@ Metrics are collected in the testbench (`sim/tb_rvec32i.sv`). Cycles are counted
 | `fibonacci_sec` | 53 | 52 | 0.981132 |
 | `mat_mult` | 162 | 161 | 0.993827 |
 | `rgb_hlb` | 112 | 111 | 0.991071 |
+
+To regenerate a base vs RISCV-EC-v1.1.0-PF comparison table, run:
+
+```bash
+make -C sim benchmark
+```
+
+The benchmark script writes `sim/benchmark_results.md` with:
+
+| benchmark | ciclos base | instrucciones base | CPI base | ciclos RISCV-EC-v1.1.0-PF | instrucciones RISCV-EC-v1.1.0-PF | CPI RISCV-EC-v1.1.0-PF | mejora porcentual | flush_count | prefetch_empty_count |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 
 ---
 
@@ -105,33 +147,56 @@ This repository includes a SystemVerilog port under `rtl_sv/`, a simulation-read
 - Verilator (5.x recommended)
 - GTKWave
 - GNU Make, GCC/G++
+- Python 3
 
 ### Install dependencies (Debian/Ubuntu)
 ```bash
 sudo apt-get update
-sudo apt-get install -y verilator gtkwave build-essential
+sudo apt-get install -y verilator gtkwave build-essential gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf
 ```
 
 ### Simulation workflow
-Quick start:
+Build and run the default RISCV-EC-v1.1.0-PF configuration:
 ```bash
 make -C sim
 make -C sim run
 ```
-Run all kernels:
+
+Build the base configuration without prefetch:
+```bash
+make -C sim base
+```
+
+Build RISCV-EC-v1.1.0-PF with the default prefetch depth:
+```bash
+make -C sim pf
+```
+
+Run all kernels without prefetch:
+```bash
+make -C sim run_base
+```
+
+Run all kernels with RISCV-EC-v1.1.0-PF:
 ```bash
 make -C sim run_all
 ```
+
+Run the benchmark comparison:
+```bash
+make -C sim benchmark
+```
+
 Run a specific kernel:
 ```bash
-./sim/obj_dir/simv +KERNEL=Algorithms/rv32i/mat_mult.s
+./sim/obj_dir_pf_d2/simv_pf_d2 +KERNEL=Algorithms/rv32i/mat_mult.s
 ```
 
 Notes:
 - Default kernel is `Algorithms/rv32i/count_up.s`.
 - Available kernels (from `Algorithms/`): `count_down`, `count_up`, `fibonacci_sec`, `mat_mult`, `rgb_hlb`.
-- `make -C sim` builds only; `make -C sim run` builds (if needed) and runs.
-- The testbench assembles the `.s` kernel, converts it to `kernel.hex`, loads it into instruction ROM (`prog_m_0.mem`), and runs until the kernel writes to `0xFF` (or a timeout). `sim/wave.vcd` is generated.
+- `make -C sim` builds the default PF configuration; `make -C sim run` builds if needed and runs it.
+- The testbench assembles the `.s` kernel, converts it to `kernel.hex`, loads it into instruction ROM (`prog_m_0.mem`), and runs until the kernel writes to `0xFF` (or a timeout). PF and base waveforms are written as `sim/wave_pf.vcd` and `sim/wave_base.vcd`.
   Example sentinel write in C:
   ```c
   *(volatile uint8_t *)0xFF = 1;
@@ -147,61 +212,19 @@ Expected console output (examples):
 - Verilator: Walltime 8.847 s (elab=0.002, cvt=0.017, bld=8.812); cpu 0.029 s on 1 threads; alloced 9.551 MB
 ```
 ```
-cycles=NNN instructions=MMM ipc=X.XXXXXX
+RESULT config=RISCV-EC-v1.1.0-PF depth=2 kernel=Algorithms/rv32i/count_up.s cycles=NNN instructions=MMM cpi=X.XXXXXX imem_req=NNN imem_stall=NNN prefetch_hit=NNN prefetch_empty=NNN flush=NNN branch=NNN taken_branch=NNN done=1
 - tb_rvec32i.sv:68: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
 - Verilator: $finish at 2us; walltime 0.007 s; speed 1.365 ms/s
 - Verilator: cpu 0.001 s on 1 threads; alloced 57 MB
 ```
 
-Example `run_all` metrics:
-```
-**************************************************
-* Running Algorithms/rv32i/count_down.s
-**************************************************
-cycles=24 instructions=23 ipc=0.958333
-- tb_rvec32i.sv:76: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 245ns; walltime 0.013 s; speed 153.982 us/s
-- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
-**************************************************
-* Running Algorithms/rv32i/count_up.s
-**************************************************
-cycles=24 instructions=23 ipc=0.958333
-- tb_rvec32i.sv:76: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 245ns; walltime 0.014 s; speed 170.785 us/s
-- Verilator: cpu 0.001 s on 1 threads; alloced 57 MB
-**************************************************
-* Running Algorithms/rv32i/fibonacci_sec.s
-**************************************************
-cycles=53 instructions=52 ipc=0.981132
-- tb_rvec32i.sv:76: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 535ns; walltime 0.013 s; speed 339.070 us/s
-- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
-**************************************************
-* Running Algorithms/rv32i/mat_mult.s
-**************************************************
-cycles=162 instructions=161 ipc=0.993827
-- tb_rvec32i.sv:76: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 2us; walltime 0.015 s; speed 697.314 us/s
-- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
-**************************************************
-* Running Algorithms/rv32i/rgb_hlb.s
-**************************************************
-cycles=112 instructions=111 ipc=0.991071
-- tb_rvec32i.sv:76: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
-- Verilator: $finish at 1us; walltime 0.015 s; speed 557.200 us/s
-- Verilator: cpu 0.002 s on 1 threads; alloced 57 MB
-```
+Use `make -C sim benchmark` to generate current base vs PF results instead of relying on fixed console examples.
 
 
 ### View waveforms in GTKWave
 ```bash
-gtkwave sim/wave.vcd
+gtkwave sim/wave_pf.vcd
 ```
 
 ### Signals to inspect in GTKWave
@@ -311,12 +334,18 @@ If you use this repository or reference its contents, please cite the following 
 │   └── rgb_hlb.c
 ├── convert_kernels.py
 ├── docs
+│   ├── RISCV-EC-PF.md
+│   └── RISCV-EC-v1.0.0.png
 ├── LICENSE
 ├── README.md
 ├── rtl_sv
+│   ├── instruction_prefetch_buffer.sv
+│   └── ...
 ├── rvec32i.sv
 ├── sim
-│   └── obj_dir
+│   ├── Makefile
+│   ├── run_benchmarks.py
+│   └── tb_rvec32i.sv
 └── wave.vcd
 ```
 

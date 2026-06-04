@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: mux_c.sv - Branch/PC mux selecting target or increment.
 
 `timescale 1ns/1ps

@@ -1,4 +1,4 @@
-// Core: RISCV-EC-v1.0.0
+// Core: RISCV-EC-v1.1.0-PF
 // File: CU.sv - Control unit: decodes instruction fields and generates control signals.
 
 `timescale 1ns/1ps
